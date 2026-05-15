@@ -13,6 +13,8 @@
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body>
@@ -100,6 +102,36 @@
                     ✅ Eyes Normal
 
                 </p>
+
+            </div>
+
+            <!-- BLINK GRAPH -->
+
+            <div class="card">
+
+                <h2>Blink Analytics</h2>
+
+                <canvas id="blinkChart"></canvas>
+
+            </div>
+
+            <!-- ATTENTION GRAPH -->
+
+            <div class="card">
+
+                <h2>Attention Analytics</h2>
+
+                <canvas id="attentionChart"></canvas>
+
+            </div>
+
+            <!-- FPS GRAPH -->
+
+            <div class="card">
+
+                <h2>Performance Analytics</h2>
+
+                <canvas id="fpsChart"></canvas>
 
             </div>
 
@@ -257,6 +289,141 @@ let lastBlinkTime = Date.now();
 
 let lastFrameTime = performance.now();
 
+let lastVoiceAlert = 0;
+
+// CHART DATA
+
+const blinkData = [];
+
+const attentionData = [];
+
+const fpsData = [];
+
+const labels = [];
+
+// CHARTS
+
+const blinkChart =
+    new Chart(
+
+        document.getElementById(
+            'blinkChart'
+        ),
+
+        {
+            type:'line',
+
+            data:{
+                labels:labels,
+
+                datasets:[{
+                    label:'Blinks',
+                    data:blinkData,
+                    borderColor:'#00ffee'
+                }]
+            }
+        }
+
+    );
+
+const attentionChart =
+    new Chart(
+
+        document.getElementById(
+            'attentionChart'
+        ),
+
+        {
+            type:'line',
+
+            data:{
+                labels:labels,
+
+                datasets:[{
+                    label:'Attention',
+                    data:attentionData,
+                    borderColor:'#00ff00'
+                }]
+            }
+        }
+
+    );
+
+const fpsChart =
+    new Chart(
+
+        document.getElementById(
+            'fpsChart'
+        ),
+
+        {
+            type:'line',
+
+            data:{
+                labels:labels,
+
+                datasets:[{
+                    label:'FPS',
+                    data:fpsData,
+                    borderColor:'#ffff00'
+                }]
+            }
+        }
+
+    );
+
+function updateCharts(attention,fps){
+
+    const time =
+        Math.floor(
+            (Date.now()-startTime)/1000
+        );
+
+    labels.push(time);
+
+    blinkData.push(blinkCount);
+
+    attentionData.push(attention);
+
+    fpsData.push(fps);
+
+    if(labels.length > 20){
+
+        labels.shift();
+
+        blinkData.shift();
+
+        attentionData.shift();
+
+        fpsData.shift();
+
+    }
+
+    blinkChart.update();
+
+    attentionChart.update();
+
+    fpsChart.update();
+
+}
+
+function speak(text){
+
+    const now = Date.now();
+
+    if(now-lastVoiceAlert > 5000){
+
+        const speech =
+            new SpeechSynthesisUtterance(text);
+
+        speechSynthesis.speak(speech);
+
+        lastVoiceAlert = now;
+
+    }
+
+}
+
 async function setupCamera(){
 
     const stream =
@@ -333,6 +500,8 @@ function onResults(results){
         canvas.height
     );
 
+    let attentionValue = 100;
+
     if(results.multiFaceLandmarks){
 
         for(const landmarks of results.multiFaceLandmarks){
@@ -374,7 +543,7 @@ function onResults(results){
                 height
             );
 
-            // LEFT EYE BOX
+            // EYE BOXES
 
             const leftEyeX =
                 landmarks[33].x * canvas.width;
@@ -390,8 +559,6 @@ function onResults(results){
                 50,
                 24
             );
-
-            // RIGHT EYE BOX
 
             const rightEyeX =
                 landmarks[263].x * canvas.width;
@@ -418,17 +585,7 @@ function onResults(results){
                 40
             );
 
-            // STATUS
-
-            ctx.fillStyle = "yellow";
-
-            ctx.fillText(
-                "Face Detected",
-                20,
-                80
-            );
-
-            // REAL EYE LANDMARKS
+            // EYES
 
             const leftEye = [
 
@@ -452,8 +609,6 @@ function onResults(results){
 
             ];
 
-            // EAR
-
             const leftEAR =
                 calculateEAR(leftEye);
 
@@ -463,13 +618,11 @@ function onResults(results){
             const avgEAR =
                 (leftEAR + rightEAR)/2;
 
-            // BLINK SETTINGS
+            // BLINK
 
             const blinkThreshold = 0.23;
 
             const blinkCooldown = 400;
-
-            // BLINK DETECTION
 
             if(avgEAR < blinkThreshold){
 
@@ -509,7 +662,7 @@ function onResults(results){
 
             }
 
-            // EYE STRAIN
+            // STRAIN
 
             if(
                 (Date.now()-lastBlinkTime)/1000 > 15
@@ -519,6 +672,8 @@ function onResults(results){
                     'strainText'
                 ).innerText =
                     "⚠ Eye Strain Detected";
+
+                speak("Please blink your eyes");
 
             }
 
@@ -543,6 +698,8 @@ function onResults(results){
                 ).innerText =
                     "Too Close";
 
+                speak("You are too close");
+
             }
 
             else if(faceSize < 0.12){
@@ -551,6 +708,8 @@ function onResults(results){
                     'distanceText'
                 ).innerText =
                     "Too Far";
+
+                speak("Move closer");
 
             }
 
@@ -573,6 +732,8 @@ function onResults(results){
                 nose.x > 0.65
             ){
 
+                attentionValue = 40;
+
                 document.getElementById(
                     'attentionScore'
                 ).innerText = 40;
@@ -582,9 +743,13 @@ function onResults(results){
                 ).innerText =
                     "⚠ Looking Away";
 
+                speak("Please focus on screen");
+
             }
 
             else{
+
+                attentionValue = 100;
 
                 document.getElementById(
                     'attentionScore'
@@ -597,11 +762,14 @@ function onResults(results){
 
             }
 
+            updateCharts(
+                attentionValue,
+                fps
+            );
+
         }
 
     }
-
-    // SCREEN TIME
 
     document.getElementById(
         'screenTime'
