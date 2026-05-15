@@ -5,190 +5,222 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>VisionGuard AI</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <h1>👁️ VisionGuard AI</h1>
+    <h1>👁️ VisionGuard AI</h1>
 
-        <div class="dashboard">
+    <div class="dashboard">
 
-            <!-- Webcam Section -->
-            <div class="video-section">
+        <!-- CAMERA -->
 
-                <video
-                    id="webcam"
-                        autoplay
-                        playsinline
-                        width="100%"
-                        style="
-                            border-radius:20px;
-                            border:4px solid #00ffee;
-                            box-shadow:0 0 30px #00ffee;
-                    "
-                ></video>
+        <div class="camera-box">
+
+            <video
+                id="webcam"
+                autoplay
+                playsinline
+                muted
+            ></video>
+
+            <canvas id="overlay"></canvas>
+
+        </div>
+
+        <!-- SIDE PANEL -->
+
+        <div class="side-panel">
+
+            <!-- STATUS -->
+
+            <div class="card">
+
+                <h2>AI Status</h2>
+
+                <p id="statusText">
+
+                    🟢 AI Running
+
+                </p>
 
             </div>
 
-            <!-- Right Side Dashboard -->
-            <div class="info-panel">
+            <!-- ANALYTICS -->
 
-                <!-- AI STATUS -->
-                <div class="card">
+            <div class="card">
 
-                    <h2>AI Status</h2>
+                <h2>Live Analytics</h2>
 
-                    <p>🟢 Active</p>
+                <p>
+                    Blinks:
+                    <span id="blinkCount">0</span>
+                </p>
 
-                </div>
+                <p>
+                    Attention:
+                    <span id="attentionScore">100</span>%
+                </p>
 
-                <!-- VISION TEST -->
-                <div class="card">
+                <p>
+                    Screen Time:
+                    <span id="screenTime">0</span>s
+                </p>
 
-                    <h2>Vision Test</h2>
+                <p>
+                    Distance:
+                    <span id="distanceText">Normal</span>
+                </p>
 
-                    <h1 style="font-size:60px; text-align:center;">
-                        {{ current_letter }}
-                    </h1>
+                <p>
+                    FPS:
+                    <span id="fps">0</span>
+                </p>
 
-                    <form action="/vision_test" method="POST">
+            </div>
 
-                        <input
-                            type="text"
-                            name="answer"
-                            maxlength="1"
-                            required
-                            style="
-                                width:80%;
-                                padding:10px;
-                                font-size:20px;
-                                border-radius:10px;
-                                border:none;
-                            "
-                        >
+            <!-- EYE STRAIN -->
 
-                        <br><br>
+            <div class="card">
 
-                        <button
-                            type="submit"
-                            style="
-                                padding:10px 20px;
-                                font-size:18px;
-                                border:none;
-                                border-radius:10px;
-                                background:#00ffcc;
-                                cursor:pointer;
-                                font-weight:bold;
-                            "
-                        >
-                            Submit
-                        </button>
+                <h2>Eye Strain</h2>
 
-                    </form>
+                <p id="strainText">
 
-                    <br>
+                    ✅ Eyes Normal
 
-                    <p>Correct Answers: {{ vision_score }}</p>
+                </p>
 
-                    <p>Total Attempts: {{ total_attempts }}</p>
+            </div>
 
-                    <p>Accuracy: {{ accuracy }}%</p>
+            <!-- VISION TEST -->
 
-                </div>
+            <div class="card">
 
-                <!-- COLOR BLINDNESS TEST -->
-                <div class="card">
+                <h2>Vision Test</h2>
 
-                    <h2>Color Blindness Test</h2>
+                <h1 class="vision-letter">
 
-                    <div style="text-align:center;">
+                    {{ current_letter }}
 
-                        <img
-                            src="{{ url_for('static', filename=current_color_test['image']) }}"
-                            width="220"
-                            style="border-radius:15px;"
-                        >
+                </h1>
 
-                    </div>
+                <form action="/vision_test"
+                      method="POST">
 
-                    <br>
+                    <input
+                        type="text"
+                        name="answer"
+                        maxlength="1"
+                        required
+                    >
 
-                    <form action="/color_test" method="POST">
+                    <br><br>
 
-                        <input
-                            type="text"
-                            name="color_answer"
-                            required
-                            style="
-                                width:80%;
-                                padding:10px;
-                                font-size:20px;
-                                border-radius:10px;
-                                border:none;
-                            "
-                        >
+                    <button type="submit">
 
-                        <br><br>
+                        Submit
 
-                        <button
-                            type="submit"
-                            style="
-                                padding:10px 20px;
-                                font-size:18px;
-                                border:none;
-                                border-radius:10px;
-                                background:#00ffcc;
-                                cursor:pointer;
-                                font-weight:bold;
-                            "
-                        >
-                            Submit
-                        </button>
+                    </button>
 
-                    </form>
+                </form>
 
-                    <br>
+                <br>
 
-                    <p>Correct Answers: {{ color_score }}</p>
+                <p>
+                    Correct:
+                    {{ vision_score }}
+                </p>
 
-                    <p>Total Attempts: {{ color_attempts }}</p>
+                <p>
+                    Attempts:
+                    {{ total_attempts }}
+                </p>
 
-                    <p>Accuracy: {{ color_accuracy }}%</p>
+                <p>
+                    Accuracy:
+                    {{ accuracy }}%
+                </p>
 
-                </div>
+            </div>
 
-                <!-- PDF REPORT -->
-                <div class="card">
+            <!-- COLOR TEST -->
 
-                    <h2>Download Report</h2>
+            <div class="card">
 
-                    <a href="/generate_report">
+                <h2>Color Blindness Test</h2>
 
-                        <button
-                            style="
-                                padding:12px 20px;
-                                font-size:18px;
-                                border:none;
-                                border-radius:10px;
-                                background:#00ffcc;
-                                cursor:pointer;
-                                font-weight:bold;
-                            "
-                        >
-                            Generate PDF Report
-                        </button>
+                <img
+                    src="{{ url_for('static',
+                    filename=current_color_test['image']) }}"
+                    class="plate"
+                >
 
-                    </a>
+                <br><br>
 
-                </div>
+                <form action="/color_test"
+                      method="POST">
+
+                    <input
+                        type="text"
+                        name="color_answer"
+                        required
+                    >
+
+                    <br><br>
+
+                    <button type="submit">
+
+                        Submit
+
+                    </button>
+
+                </form>
+
+                <br>
+
+                <p>
+                    Correct:
+                    {{ color_score }}
+                </p>
+
+                <p>
+                    Attempts:
+                    {{ color_attempts }}
+                </p>
+
+                <p>
+                    Accuracy:
+                    {{ color_accuracy }}%
+                </p>
+
+            </div>
+
+            <!-- REPORT -->
+
+            <div class="card">
+
+                <h2>Download Report</h2>
+
+                <a href="/generate_report">
+
+                    <button>
+
+                        Generate PDF Report
+
+                    </button>
+
+                </a>
 
             </div>
 
@@ -196,36 +228,452 @@
 
     </div>
 
+</div>
+
+<!-- MEDIAPIPE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+
 <script>
 
-const video = document.getElementById('webcam');
+const video =
+    document.getElementById('webcam');
 
-async function startCamera() {
+const canvas =
+    document.getElementById('overlay');
 
-    try {
+const ctx =
+    canvas.getContext('2d');
 
-        const stream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: false
+let blinkCount = 0;
+
+let eyeClosed = false;
+
+let startTime = Date.now();
+
+let lastBlinkTime = Date.now();
+
+let lastFrameTime = performance.now();
+
+async function setupCamera(){
+
+    const stream =
+        await navigator.mediaDevices.getUserMedia({
+
+            video:{
+                width:960,
+                height:720
+            }
+
         });
 
-        video.srcObject = stream;
+    video.srcObject = stream;
 
-    }
+    return new Promise((resolve)=>{
 
-    catch(error) {
+        video.onloadedmetadata = ()=>{
 
-        console.error("Camera access denied", error);
+            resolve(video);
 
-        alert("Please allow camera access.");
+        };
 
-    }
+    });
 
 }
 
-startCamera();
+function euclidean(p1,p2){
+
+    return Math.sqrt(
+
+        Math.pow(p1.x-p2.x,2)+
+        Math.pow(p1.y-p2.y,2)
+
+    );
+
+}
+
+function calculateEAR(eye){
+
+    const vertical1 =
+        euclidean(eye[1], eye[5]);
+
+    const vertical2 =
+        euclidean(eye[2], eye[4]);
+
+    const horizontal =
+        euclidean(eye[0], eye[3]);
+
+    return (
+        vertical1 + vertical2
+    ) / (2.0 * horizontal);
+
+}
+
+function onResults(results){
+
+    const now = performance.now();
+
+    const fps =
+        Math.round(
+            1000/(now-lastFrameTime)
+        );
+
+    lastFrameTime = now;
+
+    document.getElementById(
+        'fps'
+    ).innerText = fps;
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    if(results.multiFaceLandmarks){
+
+        for(const landmarks of results.multiFaceLandmarks){
+
+            // FACE BOX
+
+            const left =
+                landmarks[234];
+
+            const right =
+                landmarks[454];
+
+            const top =
+                landmarks[10];
+
+            const bottom =
+                landmarks[152];
+
+            const x =
+                left.x * canvas.width;
+
+            const y =
+                top.y * canvas.height;
+
+            const width =
+                (right.x-left.x) * canvas.width;
+
+            const height =
+                (bottom.y-top.y) * canvas.height;
+
+            ctx.strokeStyle = "#00ffee";
+
+            ctx.lineWidth = 4;
+
+            ctx.strokeRect(
+                x,
+                y,
+                width,
+                height
+            );
+
+            // LEFT EYE BOX
+
+            const leftEyeX =
+                landmarks[33].x * canvas.width;
+
+            const leftEyeY =
+                landmarks[159].y * canvas.height;
+
+            ctx.strokeStyle = "#00ff00";
+
+            ctx.strokeRect(
+                leftEyeX-25,
+                leftEyeY-12,
+                50,
+                24
+            );
+
+            // RIGHT EYE BOX
+
+            const rightEyeX =
+                landmarks[263].x * canvas.width;
+
+            const rightEyeY =
+                landmarks[386].y * canvas.height;
+
+            ctx.strokeRect(
+                rightEyeX-25,
+                rightEyeY-12,
+                50,
+                24
+            );
+
+            // TITLE
+
+            ctx.font = "28px Arial";
+
+            ctx.fillStyle = "#00ffee";
+
+            ctx.fillText(
+                "VisionGuard AI",
+                20,
+                40
+            );
+
+            // STATUS
+
+            ctx.fillStyle = "yellow";
+
+            ctx.fillText(
+                "Face Detected",
+                20,
+                80
+            );
+
+            // REAL EYE LANDMARKS
+
+            const leftEye = [
+
+                landmarks[33],
+                landmarks[160],
+                landmarks[158],
+                landmarks[133],
+                landmarks[153],
+                landmarks[144]
+
+            ];
+
+            const rightEye = [
+
+                landmarks[362],
+                landmarks[385],
+                landmarks[387],
+                landmarks[263],
+                landmarks[373],
+                landmarks[380]
+
+            ];
+
+            // EAR
+
+            const leftEAR =
+                calculateEAR(leftEye);
+
+            const rightEAR =
+                calculateEAR(rightEye);
+
+            const avgEAR =
+                (leftEAR + rightEAR)/2;
+
+            // BLINK SETTINGS
+
+            const blinkThreshold = 0.23;
+
+            const blinkCooldown = 400;
+
+            // BLINK DETECTION
+
+            if(avgEAR < blinkThreshold){
+
+                if(!eyeClosed){
+
+                    eyeClosed = true;
+
+                }
+
+            }
+
+            else{
+
+                if(eyeClosed){
+
+                    const now = Date.now();
+
+                    if(
+                        now-lastBlinkTime >
+                        blinkCooldown
+                    ){
+
+                        blinkCount++;
+
+                        document.getElementById(
+                            'blinkCount'
+                        ).innerText =
+                            blinkCount;
+
+                        lastBlinkTime = now;
+
+                    }
+
+                }
+
+                eyeClosed = false;
+
+            }
+
+            // EYE STRAIN
+
+            if(
+                (Date.now()-lastBlinkTime)/1000 > 15
+            ){
+
+                document.getElementById(
+                    'strainText'
+                ).innerText =
+                    "⚠ Eye Strain Detected";
+
+            }
+
+            else{
+
+                document.getElementById(
+                    'strainText'
+                ).innerText =
+                    "✅ Eyes Normal";
+
+            }
+
+            // DISTANCE
+
+            const faceSize =
+                right.x-left.x;
+
+            if(faceSize > 0.35){
+
+                document.getElementById(
+                    'distanceText'
+                ).innerText =
+                    "Too Close";
+
+            }
+
+            else if(faceSize < 0.12){
+
+                document.getElementById(
+                    'distanceText'
+                ).innerText =
+                    "Too Far";
+
+            }
+
+            else{
+
+                document.getElementById(
+                    'distanceText'
+                ).innerText =
+                    "Normal";
+
+            }
+
+            // ATTENTION
+
+            const nose =
+                landmarks[1];
+
+            if(
+                nose.x < 0.35 ||
+                nose.x > 0.65
+            ){
+
+                document.getElementById(
+                    'attentionScore'
+                ).innerText = 40;
+
+                document.getElementById(
+                    'statusText'
+                ).innerText =
+                    "⚠ Looking Away";
+
+            }
+
+            else{
+
+                document.getElementById(
+                    'attentionScore'
+                ).innerText = 100;
+
+                document.getElementById(
+                    'statusText'
+                ).innerText =
+                    "🟢 Focused";
+
+            }
+
+        }
+
+    }
+
+    // SCREEN TIME
+
+    document.getElementById(
+        'screenTime'
+    ).innerText = Math.floor(
+
+        (Date.now()-startTime)/1000
+
+    );
+
+}
+
+async function main(){
+
+    await setupCamera();
+
+    video.play();
+
+    canvas.width = 960;
+
+    canvas.height = 720;
+
+    const faceMesh =
+        new FaceMesh({
+
+            locateFile:(file)=>{
+
+                return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+
+            }
+
+        });
+
+    faceMesh.setOptions({
+
+        maxNumFaces:1,
+
+        refineLandmarks:true,
+
+        minDetectionConfidence:0.7,
+
+        minTrackingConfidence:0.7
+
+    });
+
+    faceMesh.onResults(onResults);
+
+    const camera =
+        new Camera(video,{
+
+            onFrame: async ()=>{
+
+                await faceMesh.send({
+
+                    image:video
+
+                });
+
+            },
+
+            width:960,
+            height:720
+
+        });
+
+    camera.start();
+
+}
+
+main();
 
 </script>
+
 </body>
 
 </html>

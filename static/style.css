@@ -1,55 +1,181 @@
-body {
-    margin: 0;
-    padding: 0;
-    background: #0f172a;
-    font-family: Arial, sans-serif;
-    color: white;
+body{
+
+    margin:0;
+    padding:0;
+
+    background:#061133;
+
+    font-family:Arial;
+
+    color:white;
+
 }
 
-.container {
-    padding: 20px;
+.container{
+
+    width:98%;
+    margin:auto;
+
+    text-align:center;
+
 }
 
-h1 {
-    text-align: center;
-    color: #00ffcc;
-    font-size: 40px;
-    margin-bottom: 30px;
+h1{
+
+    color:#00ffee;
+
+    margin-top:20px;
+
 }
 
-.dashboard {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    align-items: flex-start;
+.dashboard{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:flex-start;
+
+    gap:30px;
+
+    flex-wrap:wrap;
+
 }
 
-.video-section img {
-    width: 800px;
-    border-radius: 20px;
-    border: 4px solid #00ffcc;
-    box-shadow: 0 0 30px #00ffcc;
+/* CAMERA */
+
+.camera-box{
+
+    position:relative;
+
+    width:960px;
+
+    height:720px;
+
 }
 
-.info-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+/* VIDEO */
+
+#webcam{
+
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:960px;
+    height:720px;
+
+    object-fit:cover;
+
+    border-radius:20px;
+
+    border:4px solid #00ffee;
+
+    box-shadow:0 0 30px #00ffee;
+
 }
 
-.card {
-    background: #1e293b;
-    padding: 20px;
-    width: 250px;
-    border-radius: 20px;
-    box-shadow: 0 0 15px rgba(0,255,200,0.3);
+/* OVERLAY */
+
+#overlay{
+
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:960px;
+    height:720px;
+
+    pointer-events:none;
+
 }
 
-.card h2 {
-    color: #00ffcc;
-    margin-bottom: 10px;
+/* SIDE PANEL */
+
+.side-panel{
+
+    width:300px;
+
 }
 
-.card p {
-    font-size: 18px;
+/* CARDS */
+
+.card{
+
+    background:#1d2942;
+
+    padding:20px;
+
+    border-radius:20px;
+
+    margin-bottom:20px;
+
+    box-shadow:0 0 15px #00ffee55;
+
+}
+
+.card h2{
+
+    color:#00ffee;
+
+}
+
+/* INPUT */
+
+input{
+
+    width:80%;
+
+    padding:10px;
+
+    border:none;
+
+    border-radius:10px;
+
+}
+
+/* BUTTON */
+
+button{
+
+    padding:10px 20px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#00ffee;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+}
+
+button:hover{
+
+    background:#00ccbb;
+
+}
+
+/* LETTER */
+
+.vision-letter{
+
+    font-size:70px;
+
+    color:#00ffee;
+
+}
+
+/* PLATE */
+
+.plate{
+
+    width:240px;
+
+    border-radius:15px;
+
 }
