@@ -89,6 +89,11 @@
                     <span id="fps">0</span>
                 </p>
 
+                <p>
+                    Room Light:
+                    <span id="lightStatus">Normal</span>
+                </p>
+
             </div>
 
             <!-- EYE STRAIN -->
@@ -268,6 +273,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
 
 const video =
@@ -411,7 +418,7 @@ function speak(text){
 
     const now = Date.now();
 
-    if(now-lastVoiceAlert > 5000){
+    if(now-lastVoiceAlert > 6000){
 
         const speech =
             new SpeechSynthesisUtterance(text);
@@ -478,6 +485,66 @@ function calculateEAR(eye){
 
 }
 
+// DARK ROOM DETECTION
+
+function detectBrightness(){
+
+    ctx.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    const imageData =
+        ctx.getImageData(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+    const data = imageData.data;
+
+    let brightness = 0;
+
+    for(let i=0; i<data.length; i+=4){
+
+        brightness +=
+            (
+                data[i] +
+                data[i+1] +
+                data[i+2]
+            ) / 3;
+
+    }
+
+    brightness =
+        brightness / (data.length/4);
+
+    if(brightness < 60){
+
+        document.getElementById(
+            'lightStatus'
+        ).innerText =
+            "Low Light";
+
+        speak("Low light detected");
+
+    }
+
+    else{
+
+        document.getElementById(
+            'lightStatus'
+        ).innerText =
+            "Normal";
+
+    }
+
+}
+
 function onResults(results){
 
     const now = performance.now();
@@ -501,6 +568,8 @@ function onResults(results){
     );
 
     let attentionValue = 100;
+
+    detectBrightness();
 
     if(results.multiFaceLandmarks){
 
