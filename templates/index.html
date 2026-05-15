@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>VisionGuard AI</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>👁️ VisionGuard AI</h1>
+
+        <div class="dashboard">
+
+            <!-- Webcam Section -->
+            <div class="video-section">
+
+                <img src="{{ url_for('video') }}">
+
+            </div>
+
+            <!-- Right Side Dashboard -->
+            <div class="info-panel">
+
+                <!-- AI STATUS -->
+                <div class="card">
+
+                    <h2>AI Status</h2>
+
+                    <p>🟢 Active</p>
+
+                </div>
+
+                <!-- VISION TEST -->
+                <div class="card">
+
+                    <h2>Vision Test</h2>
+
+                    <h1 style="font-size:60px; text-align:center;">
+                        {{ current_letter }}
+                    </h1>
+
+                    <form action="/vision_test" method="POST">
+
+                        <input
+                            type="text"
+                            name="answer"
+                            maxlength="1"
+                            required
+                            style="
+                                width:80%;
+                                padding:10px;
+                                font-size:20px;
+                                border-radius:10px;
+                                border:none;
+                            "
+                        >
+
+                        <br><br>
+
+                        <button
+                            type="submit"
+                            style="
+                                padding:10px 20px;
+                                font-size:18px;
+                                border:none;
+                                border-radius:10px;
+                                background:#00ffcc;
+                                cursor:pointer;
+                                font-weight:bold;
+                            "
+                        >
+                            Submit
+                        </button>
+
+                    </form>
+
+                    <br>
+
+                    <p>Correct Answers: {{ vision_score }}</p>
+
+                    <p>Total Attempts: {{ total_attempts }}</p>
+
+                    <p>Accuracy: {{ accuracy }}%</p>
+
+                </div>
+
+                <!-- COLOR BLINDNESS TEST -->
+                <div class="card">
+
+                    <h2>Color Blindness Test</h2>
+
+                    <div style="text-align:center;">
+
+                        <img
+                            src="{{ url_for('static', filename=current_color_test['image']) }}"
+                            width="220"
+                            style="border-radius:15px;"
+                        >
+
+                    </div>
+
+                    <br>
+
+                    <form action="/color_test" method="POST">
+
+                        <input
+                            type="text"
+                            name="color_answer"
+                            required
+                            style="
+                                width:80%;
+                                padding:10px;
+                                font-size:20px;
+                                border-radius:10px;
+                                border:none;
+                            "
+                        >
+
+                        <br><br>
+
+                        <button
+                            type="submit"
+                            style="
+                                padding:10px 20px;
+                                font-size:18px;
+                                border:none;
+                                border-radius:10px;
+                                background:#00ffcc;
+                                cursor:pointer;
+                                font-weight:bold;
+                            "
+                        >
+                            Submit
+                        </button>
+
+                    </form>
+
+                    <br>
+
+                    <p>Correct Answers: {{ color_score }}</p>
+
+                    <p>Total Attempts: {{ color_attempts }}</p>
+
+                    <p>Accuracy: {{ color_accuracy }}%</p>
+
+                </div>
+
+                <!-- PDF REPORT -->
+                <div class="card">
+
+                    <h2>Download Report</h2>
+
+                    <a href="/generate_report">
+
+                        <button
+                            style="
+                                padding:12px 20px;
+                                font-size:18px;
+                                border:none;
+                                border-radius:10px;
+                                background:#00ffcc;
+                                cursor:pointer;
+                                font-weight:bold;
+                            "
+                        >
+                            Generate PDF Report
+                        </button>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
