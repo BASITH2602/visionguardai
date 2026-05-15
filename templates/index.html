@@ -24,7 +24,17 @@
             <!-- Webcam Section -->
             <div class="video-section">
 
-                <img src="{{ url_for('video') }}">
+                <video
+                    id="webcam"
+                        autoplay
+                        playsinline
+                        width="100%"
+                        style="
+                            border-radius:20px;
+                            border:4px solid #00ffee;
+                            box-shadow:0 0 30px #00ffee;
+                    "
+                ></video>
 
             </div>
 
@@ -186,6 +196,36 @@
 
     </div>
 
+<script>
+
+const video = document.getElementById('webcam');
+
+async function startCamera() {
+
+    try {
+
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false
+        });
+
+        video.srcObject = stream;
+
+    }
+
+    catch(error) {
+
+        console.error("Camera access denied", error);
+
+        alert("Please allow camera access.");
+
+    }
+
+}
+
+startCamera();
+
+</script>
 </body>
 
 </html>
