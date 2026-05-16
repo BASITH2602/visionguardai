@@ -1,4 +1,5 @@
-from flask import Flask, render_template, Response, request, send_file
+from flask import Flask, jsonify, render_template, Response, request, send_file
+
 import cv2
 import random
 from reportlab.pdfgen import canvas
@@ -250,6 +251,17 @@ def generate_frames():
 
 @app.route('/')
 def index():
+    
+    global vision_score
+    global total_attempts
+    global color_score
+    global color_attempts
+
+    vision_score = 0
+    total_attempts = 0
+
+    color_score = 0
+    color_attempts = 0
 
     accuracy = 0
 
@@ -292,20 +304,50 @@ def video():
 @app.route('/vision_test', methods=['POST'])
 def vision_test():
 
-    global current_letter
     global vision_score
     global total_attempts
+    global current_letter
 
-    user_answer = request.form['answer'].upper()
+    
+    data = request.get_json(silent=True)
+
+    if data:
+
+        answer = data.get('answer')
+
+    else:
+
+        answer = request.form.get('answer')
+
+    answer = answer.upper()
 
     total_attempts += 1
 
-    if user_answer == current_letter:
+    if answer == current_letter:
+
         vision_score += 1
 
-    current_letter = random.choice(letters)
+    accuracy = round(
+        (vision_score / total_attempts) * 100,
+        2
+    )
 
-    return index()
+    current_letter = random.choice(
+        ['A','B','C','D','E','F','H','K','N','P','R','U','V','Z']
+    )
+
+   
+    return jsonify({
+
+    "score": vision_score,
+
+    "attempts": total_attempts,
+
+    "accuracy": accuracy,
+
+    "new_letter": current_letter
+
+    })
 
 # =========================
 # COLOR TEST
@@ -314,26 +356,49 @@ def vision_test():
 @app.route('/color_test', methods=['POST'])
 def color_test():
 
-    global current_color_test
     global color_score
     global color_attempts
-    global remaining_color_tests
+    global current_color_test
 
-    user_answer = request.form['color_answer'].upper()
+  
+    data = request.get_json(silent=True)
+
+    if data:
+
+        answer = data.get('answer')
+
+    else:
+
+        answer = request.form.get('color_answer')
+
+  
+        answer = answer.upper()
 
     color_attempts += 1
 
-    if user_answer == current_color_test['answer']:
+    if answer == current_color_test['answer']:
+
         color_score += 1
 
-    if len(remaining_color_tests) == 0:
-        remaining_color_tests = color_tests.copy()
+    color_accuracy = round(
+        (color_score / color_attempts) * 100,
+        2
+    )
 
-    current_color_test = random.choice(remaining_color_tests)
+    current_color_test = random.choice(color_tests)
 
-    remaining_color_tests.remove(current_color_test)
+   
+    return jsonify({
 
-    return index()
+    "score": color_score,
+
+    "attempts": color_attempts,
+
+    "accuracy": color_accuracy,
+
+    "new_image": current_color_test['image']
+
+    })
 
 # =========================
 # PDF REPORT GENERATION

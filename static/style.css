@@ -5,15 +5,18 @@ body{
 
     background:#061133;
 
-    font-family:Arial;
+    font-family:Arial,sans-serif;
 
     color:white;
+
+    overflow-x:hidden;
 
 }
 
 .container{
 
     width:98%;
+
     margin:auto;
 
     text-align:center;
@@ -26,6 +29,8 @@ h1{
 
     margin-top:20px;
 
+    font-size:40px;
+
 }
 
 .dashboard{
@@ -36,71 +41,91 @@ h1{
 
     align-items:flex-start;
 
-    gap:30px;
+    gap:25px;
 
     flex-wrap:wrap;
 
-}
+    margin-top:20px;
 
-/* CAMERA */
+}
 
 .camera-box{
 
-    position:relative;
+position:relative;
 
-    width:960px;
+width:640px;
 
-    height:720px;
+height:480px;
+
+min-width:640px;
+
+min-height:480px;
+
+border:3px solid #00ffee;
+
+border-radius:20px;
+
+overflow:hidden;
+
+box-shadow:0 0 25px #00ffee;
+
+background:#000;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
 
 }
-
-/* VIDEO */
 
 #webcam{
 
-    position:absolute;
+position:absolute;
 
-    top:0;
-    left:0;
+top:0;
 
-    width:960px;
-    height:720px;
+left:0;
 
-    object-fit:cover;
+width:100%;
 
-    border-radius:20px;
+height:100%;
 
-    border:4px solid #00ffee;
+object-fit:cover;
 
-    box-shadow:0 0 30px #00ffee;
+display:block;
+
+z-index:1;
 
 }
-
-/* OVERLAY */
 
 #overlay{
 
-    position:absolute;
+position:absolute;
 
-    top:0;
-    left:0;
+top:0;
 
-    width:960px;
-    height:720px;
+left:0;
 
-    pointer-events:none;
+width:100%;
+
+height:100%;
+
+pointer-events:none;
+
+z-index:2;
 
 }
-
-/* SIDE PANEL */
 
 .side-panel{
 
-    width:300px;
+    width:320px;
+
+    max-width:100%;
+
+    padding-bottom:50px;
 
 }
-
-/* CARDS */
 
 .card{
 
@@ -120,27 +145,29 @@ h1{
 
     color:#00ffee;
 
-}
+    margin-bottom:15px;
 
-/* INPUT */
+}
 
 input{
 
-    width:80%;
+    width:85%;
 
-    padding:10px;
+    padding:12px;
 
     border:none;
 
     border-radius:10px;
 
-}
+    font-size:16px;
 
-/* BUTTON */
+    outline:none;
+
+}
 
 button{
 
-    padding:10px 20px;
+    padding:12px 24px;
 
     border:none;
 
@@ -148,19 +175,23 @@ button{
 
     background:#00ffee;
 
+    color:black;
+
     font-weight:bold;
 
     cursor:pointer;
+
+    transition:0.3s;
+
+    font-size:16px;
 
 }
 
 button:hover{
 
-    background:#00ccbb;
+    background:#00c8cc;
 
 }
-
-/* LETTER */
 
 .vision-letter{
 
@@ -170,12 +201,104 @@ button:hover{
 
 }
 
-/* PLATE */
-
 .plate{
 
     width:240px;
 
+    max-width:100%;
+
     border-radius:15px;
+
+}
+
+/* FIXED CHARTS */
+
+.chart-card{
+
+    height:320px;
+
+    overflow:hidden;
+
+}
+
+.chart-container{
+
+    position:relative;
+
+    width:100%;
+
+    height:220px;
+
+}
+
+.chart-container canvas{
+
+    width:100% !important;
+
+    height:220px !important;
+
+}
+
+/* MOBILE */
+
+@media(max-width:1200px){
+
+    .dashboard{
+
+        flex-direction:column;
+
+        align-items:center;
+
+    }
+
+    .side-panel{
+
+        width:90%;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    h1{
+
+        font-size:30px;
+
+    }
+
+    .vision-letter{
+
+        font-size:55px;
+
+    }
+
+    button{
+
+        width:100%;
+
+    }
+
+}
+
+@media(max-width:480px){
+
+    h1{
+
+        font-size:26px;
+
+    }
+
+    .vision-letter{
+
+        font-size:45px;
+
+    }
+
+    .plate{
+
+        width:180px;
+
+    }
 
 }

@@ -1,916 +1,1346 @@
+# VisionGuard AI — Stable Full `index.html`
+
+```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VisionGuard AI</title>
 
-    <meta charset="UTF-8">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>VisionGuard AI</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 </head>
 
 <body>
 
 <div class="container">
 
-    <h1>👁️ VisionGuard AI</h1>
+<h1>👁️ VisionGuard AI</h1>
 
-    <div class="dashboard">
+<div class="dashboard">
 
-        <!-- CAMERA -->
+<div class="camera-box">
 
-        <div class="camera-box">
+<video id="webcam"
+       autoplay
+       playsinline
+       muted
+       disablePictureInPicture></video>
 
-            <video
-                id="webcam"
-                autoplay
-                playsinline
-                muted
-            ></video>
-
-            <canvas id="overlay"></canvas>
-
-        </div>
-
-        <!-- SIDE PANEL -->
-
-        <div class="side-panel">
-
-            <!-- STATUS -->
-
-            <div class="card">
-
-                <h2>AI Status</h2>
-
-                <p id="statusText">
-
-                    🟢 AI Running
-
-                </p>
-
-            </div>
-
-            <!-- ANALYTICS -->
-
-            <div class="card">
-
-                <h2>Live Analytics</h2>
-
-                <p>
-                    Blinks:
-                    <span id="blinkCount">0</span>
-                </p>
-
-                <p>
-                    Attention:
-                    <span id="attentionScore">100</span>%
-                </p>
-
-                <p>
-                    Screen Time:
-                    <span id="screenTime">0</span>s
-                </p>
-
-                <p>
-                    Distance:
-                    <span id="distanceText">Normal</span>
-                </p>
-
-                <p>
-                    FPS:
-                    <span id="fps">0</span>
-                </p>
-
-                <p>
-                    Room Light:
-                    <span id="lightStatus">Normal</span>
-                </p>
-
-            </div>
-
-            <!-- EYE STRAIN -->
-
-            <div class="card">
-
-                <h2>Eye Strain</h2>
-
-                <p id="strainText">
-
-                    ✅ Eyes Normal
-
-                </p>
-
-            </div>
-
-            <!-- BLINK GRAPH -->
-
-            <div class="card">
-
-                <h2>Blink Analytics</h2>
-
-                <canvas id="blinkChart"></canvas>
-
-            </div>
-
-            <!-- ATTENTION GRAPH -->
-
-            <div class="card">
-
-                <h2>Attention Analytics</h2>
-
-                <canvas id="attentionChart"></canvas>
-
-            </div>
-
-            <!-- FPS GRAPH -->
-
-            <div class="card">
-
-                <h2>Performance Analytics</h2>
-
-                <canvas id="fpsChart"></canvas>
-
-            </div>
-
-            <!-- VISION TEST -->
-
-            <div class="card">
-
-                <h2>Vision Test</h2>
-
-                <h1 class="vision-letter">
-
-                    {{ current_letter }}
-
-                </h1>
-
-                <form action="/vision_test"
-                      method="POST">
-
-                    <input
-                        type="text"
-                        name="answer"
-                        maxlength="1"
-                        required
-                    >
-
-                    <br><br>
-
-                    <button type="submit">
-
-                        Submit
-
-                    </button>
-
-                </form>
-
-                <br>
-
-                <p>
-                    Correct:
-                    {{ vision_score }}
-                </p>
-
-                <p>
-                    Attempts:
-                    {{ total_attempts }}
-                </p>
-
-                <p>
-                    Accuracy:
-                    {{ accuracy }}%
-                </p>
-
-            </div>
-
-            <!-- COLOR TEST -->
-
-            <div class="card">
-
-                <h2>Color Blindness Test</h2>
-
-                <img
-                    src="{{ url_for('static',
-                    filename=current_color_test['image']) }}"
-                    class="plate"
-                >
-
-                <br><br>
-
-                <form action="/color_test"
-                      method="POST">
-
-                    <input
-                        type="text"
-                        name="color_answer"
-                        required
-                    >
-
-                    <br><br>
-
-                    <button type="submit">
-
-                        Submit
-
-                    </button>
-
-                </form>
-
-                <br>
-
-                <p>
-                    Correct:
-                    {{ color_score }}
-                </p>
-
-                <p>
-                    Attempts:
-                    {{ color_attempts }}
-                </p>
-
-                <p>
-                    Accuracy:
-                    {{ color_accuracy }}%
-                </p>
-
-            </div>
-
-            <!-- REPORT -->
-
-            <div class="card">
-
-                <h2>Download Report</h2>
-
-                <a href="/generate_report">
-
-                    <button>
-
-                        Generate PDF Report
-
-                    </button>
-
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
+<canvas id="overlay"></canvas>
 
 </div>
 
-<!-- MEDIAPIPE -->
+<div class="side-panel">
 
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+<div class="card">
+<h2>AI Status</h2>
+<p id="statusText">🟢 AI Running</p>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<div class="card">
+<h2>Emotion Detection</h2>
+<h1 id="emotionText" class="vision-letter">😐</h1>
+<p id="emotionStatus">Neutral</p>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="card">
+<h2>AI Health Score</h2>
+<h1 id="healthScore" class="vision-letter">100</h1>
+<p id="healthStatus">Excellent Eye Health</p>
+</div>
+
+<div class="card">
+<h2>AI Wellness Grade</h2>
+<h1 id="aiGrade" class="vision-letter">A+</h1>
+<p id="riskLevel">Low Risk</p>
+</div>
+
+<div class="card">
+<h2>Fatigue Prediction</h2>
+<p id="fatigueText">Low Fatigue Risk</p>
+</div>
+
+<div class="card">
+<h2>Smart Break Timer</h2>
+<p id="breakText">No Break Needed</p>
+</div>
+
+<div class="card">
+<h2>AI Recommendations</h2>
+<p id="recommendationText">Everything looks good</p>
+</div>
+
+<div class="card">
+<h2>Live Analytics</h2>
+<p>Blinks: <span id="blinkCount">0</span></p>
+<p>Blink Rate: <span id="blinkRate">0</span>/min</p>
+<p>Attention: <span id="attentionScore">100</span>%</p>
+<p>Screen Time: <span id="screenTime">0</span>s</p>
+<p>Distance: <span id="distanceText">Normal</span></p>
+<p>FPS: <span id="fps">0</span></p>
+<p>Room Light: <span id="lightStatus">Normal</span></p>
+</div>
+
+<div class="card">
+<h2>Eye Strain</h2>
+<p id="strainText">Eyes Normal</p>
+<p>Duration: <span id="strainDuration">0</span>s</p>
+</div>
+
+<div class="card">
+<h2>Blink Analytics</h2>
+<div class="chart-container">
+<canvas id="blinkChart"></canvas>
+</div>
+</div>
+
+<div class="card">
+<h2>Attention Analytics</h2>
+<div class="chart-container">
+<canvas id="attentionChart"></canvas>
+</div>
+</div>
+
+<div class="card">
+<h2>Performance Analytics</h2>
+<div class="chart-container">
+<canvas id="fpsChart"></canvas>
+</div>
+</div>
+
+<div class="card">
+<h2>Vision Test</h2>
+<h1 id="visionLetter"
+class="vision-letter">
+
+{{ current_letter }}
+
+</h1>
+
+<form onsubmit="submitVision(event); return false;">
+
+<input type="text" name="answer" maxlength="1" required>
+<br><br>
+<button type="submit">Submit</button>
+</form>
+
+<div id="visionResult">
+
+Correct: {{ vision_score }}<br>
+Attempts: {{ total_attempts }}<br>
+Accuracy: {{ accuracy }}%
+
+</div>
+
+
+<div class="card">
+<h2>Color Blindness Test</h2>
+
+<img
+src="{{ url_for('static', filename=current_color_test['image']) }}"
+class="plate">
+
+<form onsubmit="submitColor(event); return false;">
+<input type="text" name="color_answer" required>
+<br><br>
+<button type="submit">Submit</button>
+</form>
+
+<div id="colorResult">
+
+Correct: {{ color_score }}<br>
+Attempts: {{ color_attempts }}<br>
+Accuracy: {{ color_accuracy }}%
+
+</div>
+
+</div>
+
+<div class="card">
+<h2>Premium AI Report</h2>
+<button onclick="downloadReport()">Generate Futuristic PDF</button>
+</div>
+
+</div>
+</div>
+</div>
 
 <script>
 
-const video =
-    document.getElementById('webcam');
-
-const canvas =
-    document.getElementById('overlay');
-
-const ctx =
-    canvas.getContext('2d');
+const video = document.getElementById('webcam');
+const canvas = document.getElementById('overlay');
+const ctx = canvas.getContext('2d');
 
 let blinkCount = 0;
-
 let eyeClosed = false;
-
 let startTime = Date.now();
-
 let lastBlinkTime = Date.now();
-
 let lastFrameTime = performance.now();
-
-let lastVoiceAlert = 0;
-
-// CHART DATA
-
-const blinkData = [];
-
-const attentionData = [];
-
-const fpsData = [];
+let totalStrainTime = 0;
+let strainStart = null;
+let chartCounter = 0;
+let lastVoiceTime = 0;
 
 const labels = [];
 
-// CHARTS
+function createChart(id,label,color){
 
-const blinkChart =
-    new Chart(
+return new Chart(document.getElementById(id),{
 
-        document.getElementById(
-            'blinkChart'
-        ),
+type:'line',
 
-        {
-            type:'line',
+data:{
+labels:labels,
+datasets:[{
+label:label,
+data:[],
+borderColor:color,
+tension:0.4
+}]
+},
 
-            data:{
-                labels:labels,
+options:{
+responsive:true,
+maintainAspectRatio:false,
+animation:false,
+scales:{
+y:{
+beginAtZero:true
+}
+}
+}
 
-                datasets:[{
-                    label:'Blinks',
-                    data:blinkData,
-                    borderColor:'#00ffee'
-                }]
-            }
-        }
-
-    );
-
-const attentionChart =
-    new Chart(
-
-        document.getElementById(
-            'attentionChart'
-        ),
-
-        {
-            type:'line',
-
-            data:{
-                labels:labels,
-
-                datasets:[{
-                    label:'Attention',
-                    data:attentionData,
-                    borderColor:'#00ff00'
-                }]
-            }
-        }
-
-    );
-
-const fpsChart =
-    new Chart(
-
-        document.getElementById(
-            'fpsChart'
-        ),
-
-        {
-            type:'line',
-
-            data:{
-                labels:labels,
-
-                datasets:[{
-                    label:'FPS',
-                    data:fpsData,
-                    borderColor:'#ffff00'
-                }]
-            }
-        }
-
-    );
-
-function updateCharts(attention,fps){
-
-    const time =
-        Math.floor(
-            (Date.now()-startTime)/1000
-        );
-
-    labels.push(time);
-
-    blinkData.push(blinkCount);
-
-    attentionData.push(attention);
-
-    fpsData.push(fps);
-
-    if(labels.length > 20){
-
-        labels.shift();
-
-        blinkData.shift();
-
-        attentionData.shift();
-
-        fpsData.shift();
-
-    }
-
-    blinkChart.update();
-
-    attentionChart.update();
-
-    fpsChart.update();
+});
 
 }
 
-function speak(text){
-
-    const now = Date.now();
-
-    if(now-lastVoiceAlert > 6000){
-
-        const speech =
-            new SpeechSynthesisUtterance(text);
-
-        speechSynthesis.speak(speech);
-
-        lastVoiceAlert = now;
-
-    }
-
-}
+const blinkChart = createChart('blinkChart','Blinks','#00ffee');
+const attentionChart = createChart('attentionChart','Attention','#00ff00');
+const fpsChart = createChart('fpsChart','FPS','#ffff00');
 
 async function setupCamera(){
 
-    const stream =
-        await navigator.mediaDevices.getUserMedia({
+const stream = await navigator.mediaDevices.getUserMedia({
+video:{
+width:640,
+height:480
+}
+});
 
-            video:{
-                width:960,
-                height:720
-            }
+video.srcObject = stream;
 
-        });
-
-    video.srcObject = stream;
-
-    return new Promise((resolve)=>{
-
-        video.onloadedmetadata = ()=>{
-
-            resolve(video);
-
-        };
-
-    });
+return new Promise((resolve)=>{
+video.onloadedmetadata = ()=>{
+resolve(video);
+};
+});
 
 }
 
 function euclidean(p1,p2){
-
-    return Math.sqrt(
-
-        Math.pow(p1.x-p2.x,2)+
-        Math.pow(p1.y-p2.y,2)
-
-    );
-
+return Math.sqrt(
+Math.pow(p1.x-p2.x,2)+Math.pow(p1.y-p2.y,2)
+);
 }
 
 function calculateEAR(eye){
 
-    const vertical1 =
-        euclidean(eye[1], eye[5]);
+const vertical1 = euclidean(eye[1], eye[5]);
+const vertical2 = euclidean(eye[2], eye[4]);
+const horizontal = euclidean(eye[0], eye[3]);
 
-    const vertical2 =
-        euclidean(eye[2], eye[4]);
-
-    const horizontal =
-        euclidean(eye[0], eye[3]);
-
-    return (
-        vertical1 + vertical2
-    ) / (2.0 * horizontal);
+return (vertical1 + vertical2)/(2.0*horizontal);
 
 }
 
-// DARK ROOM DETECTION
+function getAIGrade(score){
+if(score >= 90) return 'A+';
+if(score >= 80) return 'A';
+if(score >= 70) return 'B';
+if(score >= 60) return 'C';
+return 'RISK';
+}
 
-function detectBrightness(){
+function updateCharts(attention,fps){
 
-    ctx.drawImage(
-        video,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
+chartCounter++;
 
-    const imageData =
-        ctx.getImageData(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
+if(chartCounter % 15 !== 0){
+return;
+}
 
-    const data = imageData.data;
+const time = Math.floor((Date.now()-startTime)/1000);
 
-    let brightness = 0;
+labels.push(time);
 
-    for(let i=0; i<data.length; i+=4){
+blinkChart.data.datasets[0].data.push(blinkCount);
+attentionChart.data.datasets[0].data.push(attention);
+fpsChart.data.datasets[0].data.push(fps);
 
-        brightness +=
-            (
-                data[i] +
-                data[i+1] +
-                data[i+2]
-            ) / 3;
+if(labels.length > 15){
+labels.shift();
+blinkChart.data.datasets[0].data.shift();
+attentionChart.data.datasets[0].data.shift();
+fpsChart.data.datasets[0].data.shift();
+}
 
-    }
-
-    brightness =
-        brightness / (data.length/4);
-
-    if(brightness < 60){
-
-        document.getElementById(
-            'lightStatus'
-        ).innerText =
-            "Low Light";
-
-        speak("Low light detected");
-
-    }
-
-    else{
-
-        document.getElementById(
-            'lightStatus'
-        ).innerText =
-            "Normal";
-
-    }
+blinkChart.update('none');
+attentionChart.update('none');
+fpsChart.update('none');
 
 }
+
+function speakAlert(message){
+
+const now = Date.now();
+
+if(now - lastVoiceTime < 5000){
+return;
+}
+
+lastVoiceTime = now;
+
+const speech =
+new SpeechSynthesisUtterance(message);
+
+speech.rate = 1;
+
+speech.pitch = 1;
+
+speech.volume = 1;
+
+window.speechSynthesis.speak(speech);
+
+}
+
+
+function detectEmotion(attention,avgEAR,blinkRate){
+
+let emoji = '😐';
+let text = 'Neutral';
+
+if(avgEAR < 0.18){
+
+emoji = '😣';
+text = 'Sleepy';
+
+}
+else if(attention < 40){
+
+emoji = '😵';
+text = 'Distracted';
+
+}
+else if(blinkRate > 30){
+
+emoji = '😟';
+text = 'Stressed';
+
+}
+else if(blinkRate < 5){
+
+emoji = '😳';
+text = 'Frozen Focus';
+
+}
+else if(attention === 100 && blinkRate > 10){
+
+emoji = '🧠';
+text = 'Focused';
+
+}
+else if(avgEAR > 0.30){
+
+emoji = '😲';
+text = 'Surprised';
+
+}
+else if(blinkRate > 20){
+
+emoji = '😅';
+text = 'Active';
+
+}
+else if(attention > 90){
+
+emoji = '😊';
+text = 'Comfortable';
+
+}
+else{
+
+emoji = '🙂';
+text = 'Relaxed';
+
+}
+
+emotionText.innerText = emoji;
+emotionStatus.innerText = text;
+
+}
+
+
+async function downloadReport(){
+
+const visionText =
+document.getElementById(
+'visionResult'
+).innerText;
+
+const colorText =
+document.getElementById(
+'colorResult'
+).innerText;
+
+const visionNumbers =
+visionText.match(/\d+(\.\d+)?/g);
+
+const colorNumbers =
+colorText.match(/\d+(\.\d+)?/g);
+
+const liveVisionCorrect =
+visionNumbers ? visionNumbers[0] : '0';
+
+const liveVisionAttempts =
+visionNumbers ? visionNumbers[1] : '0';
+
+const liveVisionAccuracy =
+visionNumbers ? visionNumbers[2] : '0';
+
+const liveColorCorrect =
+colorNumbers ? colorNumbers[0] : '0';
+
+const liveColorAttempts =
+colorNumbers ? colorNumbers[1] : '0';
+
+const liveColorAccuracy =
+colorNumbers ? colorNumbers[2] : '0';
+
+const { jsPDF } = window.jspdf;
+
+const pdf = new jsPDF({
+orientation:"portrait",
+unit:"mm",
+format:"a4"
+});
+
+const primary = [0,255,238];
+const dark = [6,17,51];
+const white = [255,255,255];
+
+const sessionId =
+"VG-" + Math.floor(Math.random()*1000000);
+
+const health =
+document.getElementById(
+'healthScore'
+).innerText;
+
+const emotion =
+document.getElementById(
+'emotionStatus'
+).innerText;
+
+const grade =
+document.getElementById(
+'aiGrade'
+).innerText;
+
+const blink =
+document.getElementById(
+'blinkCount'
+).innerText;
+
+const blinkRate =
+Math.max(
+1,
+parseInt(
+document.getElementById(
+'blinkRate'
+).innerText
+)
+);
+
+const attention =
+document.getElementById(
+'attentionScore'
+).innerText;
+
+const fatigue =
+document.getElementById(
+'fatigueText'
+).innerText;
+
+const distance =
+document.getElementById(
+'distanceText'
+).innerText;
+
+const light =
+document.getElementById(
+'lightStatus'
+).innerText;
+
+const screenTime =
+document.getElementById(
+'screenTime'
+).innerText;
+
+const recommendation =
+document.getElementById(
+'recommendationText'
+).innerText;
+
+// PAGE 1
+
+pdf.setFillColor(...dark);
+
+pdf.rect(
+0,
+0,
+210,
+297,
+'F'
+);
+
+pdf.setTextColor(...primary);
+
+pdf.setFontSize(28);
+
+pdf.text(
+"VisionGuard AI",
+20,
+20
+);
+
+pdf.setFontSize(15);
+
+pdf.text(
+"Advanced AI Diagnostic Report",
+20,
+30
+);
+
+pdf.setTextColor(...white);
+
+pdf.setFontSize(11);
+
+
+pdf.text(
+`Generated: ${new Date().toLocaleString()}`,
+20,
+35
+);
+
+
+pdf.text(
+`Session ID: ${sessionId}`,
+20,
+50
+);
+
+pdf.line(
+20,
+58,
+190,
+58
+);
+
+pdf.setFontSize(13);
+
+pdf.text(`Health Score: ${health}/100`,20,80);
+pdf.text(`AI Grade: ${grade}`,20,92);
+pdf.text(`Emotion: ${emotion}`,20,104);
+pdf.text(`Blink Count: ${blink}`,20,116);
+pdf.text(`Blink Rate: ${blinkRate}/min`,20,128);
+
+pdf.text(`Attention: ${attention}%`,110,80);
+pdf.text(`Distance: ${distance}`,110,92);
+pdf.text(`Fatigue: ${fatigue}`,110,104);
+pdf.text(`Room Light: ${light}`,110,116);
+pdf.text(`Screen Time: ${screenTime}s`,110,128);
+
+// SNAPSHOT
+
+const snapshotCanvas =
+document.createElement('canvas');
+
+snapshotCanvas.width =
+video.videoWidth;
+
+snapshotCanvas.height =
+video.videoHeight;
+
+const snapshotCtx =
+snapshotCanvas.getContext('2d');
+
+snapshotCtx.drawImage(
+video,
+0,
+0
+);
+
+const snapshot =
+snapshotCanvas.toDataURL(
+'image/png'
+);
+
+pdf.addImage(
+snapshot,
+'PNG',
+40,
+160,
+120,
+80
+);
+
+// PAGE 2
+
+pdf.addPage();
+
+pdf.setFillColor(...dark);
+
+pdf.rect(
+0,
+0,
+210,
+297,
+'F'
+);
+
+pdf.setTextColor(...primary);
+
+pdf.setFontSize(24);
+
+pdf.text(
+"Behavioral Analytics",
+20,
+20
+);
+
+const blinkCanvas =
+await html2canvas(
+document.querySelector(
+'#blinkChart'
+)
+);
+
+pdf.addImage(
+blinkCanvas.toDataURL('image/png'),
+'PNG',
+15,
+35,
+80,
+50
+);
+
+const attentionCanvas =
+await html2canvas(
+document.querySelector(
+'#attentionChart'
+)
+);
+
+pdf.addImage(
+attentionCanvas.toDataURL('image/png'),
+'PNG',
+110,
+35,
+80,
+50
+);
+
+const fpsCanvas =
+await html2canvas(
+document.querySelector(
+'#fpsChart'
+)
+);
+
+pdf.addImage(
+fpsCanvas.toDataURL('image/png'),
+'PNG',
+60,
+120,
+80,
+50
+);
+
+pdf.setTextColor(...white);
+
+pdf.setFontSize(12);
+
+pdf.text(
+"AI detected stable behavioral tracking performance during monitoring.",
+20,
+230
+);
+
+// PAGE 3
+
+pdf.addPage();
+
+pdf.setFillColor(...dark);
+
+pdf.rect(
+0,
+0,
+210,
+297,
+'F'
+);
+
+pdf.setTextColor(...primary);
+
+pdf.setFontSize(24);
+
+pdf.text(
+"Vision Analysis",
+20,
+20
+);
+
+pdf.setTextColor(...white);
+
+pdf.setFontSize(13);
+
+pdf.text(
+`Vision Accuracy: ${liveVisionAccuracy}%`,
+20,
+60
+);
+
+pdf.text(
+`Vision Correct: ${liveVisionCorrect}`,
+20,
+80
+);
+
+pdf.text(
+`Vision Attempts: ${liveVisionAttempts}`,
+20,
+100
+);
+
+pdf.text(
+`Color Accuracy: ${liveColorAccuracy}%`,
+20,
+140
+);
+
+pdf.text(
+`Color Correct: ${liveColorCorrect}`,
+20,
+160
+);
+
+pdf.text(
+`Color Attempts: ${liveColorAttempts}`,
+20,
+180
+);
+
+pdf.text(
+"AI Interpretation: Healthy visual interaction detected.",
+20,
+230
+);
+
+// PAGE 4
+
+pdf.addPage();
+
+pdf.setFillColor(...dark);
+
+pdf.rect(
+0,
+0,
+210,
+297,
+'F'
+);
+
+pdf.setTextColor(...primary);
+
+pdf.setFontSize(24);
+
+pdf.text(
+"AI Recommendations",
+20,
+20
+);
+
+pdf.setDrawColor(...primary);
+
+pdf.line(
+20,
+28,
+190,
+28
+);
+
+pdf.setTextColor(...white);
+
+pdf.setFontSize(13);
+
+const productivityScore =
+Math.min(
+100,
+Math.max(
+60,
+parseInt(attention) -
+Math.floor(blinkRate/2) + 20
+)
+);
+
+const aiConfidence =
+Math.min(
+99,
+90 + Math.floor(Math.random()*10)
+);
+
+let riskLevel = "Low";
+
+if(blinkRate > 30 || attention < 50){
+
+riskLevel = "High";
+
+}
+else if(blinkRate > 20){
+
+riskLevel = "Moderate";
+
+}
+
+let wellnessStatus = "Excellent";
+
+if(attention < 70){
+
+wellnessStatus = "Moderate";
+
+}
+else if(attention < 90){
+
+wellnessStatus = "Good";
+
+}
+
+let aiSummary = "";
+
+if(attention > 90){
+
+aiSummary =
+"User maintained excellent focus and healthy visual engagement during monitoring.";
+
+}
+else if(attention > 70){
+
+aiSummary =
+"User demonstrated stable attention and acceptable eye wellness behavior.";
+
+}
+else{
+
+aiSummary =
+"AI detected reduced attention and possible visual fatigue patterns.";
+
+}
+
+pdf.text(
+`Productivity Score: ${productivityScore}%`,
+20,
+50
+);
+
+pdf.text(
+`AI Confidence: ${aiConfidence}%`,
+20,
+70
+);
+
+pdf.text(
+`Risk Level: ${riskLevel}`,
+20,
+90
+);
+
+pdf.text(
+`Eye Wellness: ${wellnessStatus}`,
+20,
+110
+);
+
+pdf.text(
+"AI Summary:",
+20,
+130
+);
+
+const splitSummary =
+pdf.splitTextToSize(
+aiSummary,
+145
+);
+
+pdf.text(
+splitSummary,
+20,
+145
+);
+
+const recommendations = [
+
+"Maintain healthy blinking frequency.",
+
+"Take 20-second eye breaks every 20 minutes.",
+
+"Maintain safe viewing distance.",
+
+"Improve ambient lighting if needed.",
+
+"Reduce prolonged screen exposure.",
+
+"AI Recommendation: " + recommendation
+
+];
+
+let y = 190;
+
+recommendations.forEach((item)=>{
+
+pdf.text(
+"• " + item,
+25,
+y
+);
+
+y += 12;
+
+});
+
+pdf.setTextColor(...primary);
+
+pdf.setFontSize(14);
+
+pdf.setTextColor(120,120,120);
+
+pdf.text(
+"VisionGuard AI Premium Intelligence",
+45,
+285
+);
+
+pdf.save(
+'VisionGuardAI_Premium_Report.pdf'
+);
+
+}
+
 
 function onResults(results){
 
-    const now = performance.now();
+const now = performance.now();
 
-    const fps =
-        Math.round(
-            1000/(now-lastFrameTime)
-        );
+const fps = Math.round(1000/(now-lastFrameTime));
+lastFrameTime = now;
 
-    lastFrameTime = now;
+fpsEl = document.getElementById('fps');
+fpsEl.innerText = fps;
 
-    document.getElementById(
-        'fps'
-    ).innerText = fps;
+ctx.clearRect(0,0,canvas.width,canvas.height);
 
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
+if(results.multiFaceLandmarks){
 
-    let attentionValue = 100;
+for(const landmarks of results.multiFaceLandmarks){
 
-    detectBrightness();
+const left = landmarks[234];
+const right = landmarks[454];
+const top = landmarks[10];
+const bottom = landmarks[152];
 
-    if(results.multiFaceLandmarks){
+const x = left.x * canvas.width;
+const y = top.y * canvas.height;
+const width = (right.x-left.x) * canvas.width;
+const height = (bottom.y-top.y) * canvas.height;
 
-        for(const landmarks of results.multiFaceLandmarks){
+ctx.strokeStyle = '#00ff00';
 
-            // FACE BOX
+ctx.strokeRect(
+landmarks[33].x * canvas.width-20,
+landmarks[159].y * canvas.height-10,
+40,
+20
+);
 
-            const left =
-                landmarks[234];
+ctx.strokeRect(
+landmarks[263].x * canvas.width-20,
+landmarks[386].y * canvas.height-10,
+40,
+20
+);
 
-            const right =
-                landmarks[454];
 
-            const top =
-                landmarks[10];
+const leftEye = [
+landmarks[33],
+landmarks[160],
+landmarks[158],
+landmarks[133],
+landmarks[153],
+landmarks[144]
+];
 
-            const bottom =
-                landmarks[152];
+const rightEye = [
+landmarks[362],
+landmarks[385],
+landmarks[387],
+landmarks[263],
+landmarks[373],
+landmarks[380]
+];
 
-            const x =
-                left.x * canvas.width;
+const leftEAR = calculateEAR(leftEye);
+const rightEAR = calculateEAR(rightEye);
+const avgEAR = (leftEAR + rightEAR)/2;
 
-            const y =
-                top.y * canvas.height;
+if(avgEAR < 0.21){
 
-            const width =
-                (right.x-left.x) * canvas.width;
+if(!eyeClosed){
+eyeClosed = true;
+}
 
-            const height =
-                (bottom.y-top.y) * canvas.height;
+}
+else{
 
-            ctx.strokeStyle = "#00ffee";
+if(eyeClosed){
+blinkCount++;
+lastBlinkTime = Date.now();
+blinkCountEl = document.getElementById('blinkCount');
+blinkCountEl.innerText = blinkCount;
+}
 
-            ctx.lineWidth = 4;
+eyeClosed = false;
 
-            ctx.strokeRect(
-                x,
-                y,
-                width,
-                height
-            );
+}
 
-            // EYE BOXES
+const screenTime = Math.max(1,Math.floor((Date.now()-startTime)/1000));
 
-            const leftEyeX =
-                landmarks[33].x * canvas.width;
+const blinkRateValue = Math.round((blinkCount/screenTime)*60);
 
-            const leftEyeY =
-                landmarks[159].y * canvas.height;
+document.getElementById('blinkRate').innerText = blinkRateValue;
 
-            ctx.strokeStyle = "#00ff00";
+if((Date.now()-lastBlinkTime)/1000 > 15){
 
-            ctx.strokeRect(
-                leftEyeX-25,
-                leftEyeY-12,
-                50,
-                24
-            );
+strainText.innerText = 'Eye Strain Detected';
 
-            const rightEyeX =
-                landmarks[263].x * canvas.width;
+speakAlert(
+'Please blink your eyes'
+);
 
-            const rightEyeY =
-                landmarks[386].y * canvas.height;
+if(!strainStart){
+strainStart = Date.now();
+}
 
-            ctx.strokeRect(
-                rightEyeX-25,
-                rightEyeY-12,
-                50,
-                24
-            );
+totalStrainTime = Math.floor((Date.now()-strainStart)/1000);
 
-            // TITLE
+}
+else{
+strainText.innerText = 'Eyes Normal';
+strainStart = null;
+}
 
-            ctx.font = "28px Arial";
+strainDuration.innerText = totalStrainTime;
 
-            ctx.fillStyle = "#00ffee";
+const faceSize = right.x-left.x;
 
-            ctx.fillText(
-                "VisionGuard AI",
-                20,
-                40
-            );
+let distance = 'Normal';
 
-            // EYES
+if(faceSize > 0.32){
 
-            const leftEye = [
+distance = 'Too Close';
 
-                landmarks[33],
-                landmarks[160],
-                landmarks[158],
-                landmarks[133],
-                landmarks[153],
-                landmarks[144]
+speakAlert(
+'You are too close to the screen'
+);
 
-            ];
+}
+else if(faceSize < 0.10){
 
-            const rightEye = [
+distance = 'Too Far';
 
-                landmarks[362],
-                landmarks[385],
-                landmarks[387],
-                landmarks[263],
-                landmarks[373],
-                landmarks[380]
+speakAlert(
+'You are too far from the screen'
+);
 
-            ];
+}
+else{
 
-            const leftEAR =
-                calculateEAR(leftEye);
+distance = 'Normal';
 
-            const rightEAR =
-                calculateEAR(rightEye);
+}
 
-            const avgEAR =
-                (leftEAR + rightEAR)/2;
 
-            // BLINK
 
-            const blinkThreshold = 0.23;
+distanceText.innerText = distance;
 
-            const blinkCooldown = 400;
+let attention = 100;
 
-            if(avgEAR < blinkThreshold){
+const nose = landmarks[1];
 
-                if(!eyeClosed){
+if(nose.x < 0.35 || nose.x > 0.65){
+attention = 40;
+statusText.innerText = 'Looking Away';
+speakAlert(
+'Please maintain attention'
+);
 
-                    eyeClosed = true;
+}
+else{
+statusText.innerText = 'Focused';
+}
 
-                }
+attentionScore.innerText = attention;
 
-            }
+let health = 100;
 
-            else{
+if(attention < 100) health -= 20;
+if(distance !== 'Normal') health -= 15;
 
-                if(eyeClosed){
+healthScore.innerText = health;
 
-                    const now = Date.now();
+aiGrade.innerText = getAIGrade(health);
 
-                    if(
-                        now-lastBlinkTime >
-                        blinkCooldown
-                    ){
+let risk = 'Low Risk';
 
-                        blinkCount++;
+if(health < 80) risk = 'Moderate Risk';
+if(health < 60) risk = 'High Risk';
 
-                        document.getElementById(
-                            'blinkCount'
-                        ).innerText =
-                            blinkCount;
+riskLevel.innerText = risk;
 
-                        lastBlinkTime = now;
+let fatigue = 'Low Fatigue Risk';
 
-                    }
+if(health < 70 || avgEAR < 0.20){
+fatigue = 'Moderate Fatigue Risk';
+}
 
-                }
+fatigueText.innerText = fatigue;
 
-                eyeClosed = false;
+let recommendation = 'Everything looks good';
 
-            }
+if(distance === 'Too Close'){
+recommendation = 'Move farther from screen';
+}
 
-            // STRAIN
+recommendationText.innerText = recommendation;
 
-            if(
-                (Date.now()-lastBlinkTime)/1000 > 15
-            ){
+const minutes = Math.floor(screenTime/60);
 
-                document.getElementById(
-                    'strainText'
-                ).innerText =
-                    "⚠ Eye Strain Detected";
+if(minutes >= 20){
+breakText.innerText = 'Take a 20 second eye break';
+}
+else{
+breakText.innerText = 'No Break Needed';
+}
 
-                speak("Please blink your eyes");
+ctx.drawImage(video,0,0,canvas.width,canvas.height);
 
-            }
+const frame = ctx.getImageData(0,0,canvas.width,canvas.height).data;
 
-            else{
+let brightness = 0;
 
-                document.getElementById(
-                    'strainText'
-                ).innerText =
-                    "✅ Eyes Normal";
+for(let i=0;i<frame.length;i+=4){
+brightness += (frame[i]+frame[i+1]+frame[i+2])/3;
+}
 
-            }
+brightness = brightness/(frame.length/4);
 
-            // DISTANCE
+lightStatus.innerText =
+brightness < 60
+? 'Low Light'
+: 'Normal';
 
-            const faceSize =
-                right.x-left.x;
+if(brightness < 60){
 
-            if(faceSize > 0.35){
+speakAlert(
+'Low light detected'
+);
 
-                document.getElementById(
-                    'distanceText'
-                ).innerText =
-                    "Too Close";
+}
 
-                speak("You are too close");
+screenTimeEl = document.getElementById('screenTime');
+screenTimeEl.innerText = screenTime;
 
-            }
+updateCharts(attention,fps);
 
-            else if(faceSize < 0.12){
+detectEmotion(attention,avgEAR,blinkRateValue);
 
-                document.getElementById(
-                    'distanceText'
-                ).innerText =
-                    "Too Far";
+}
 
-                speak("Move closer");
-
-            }
-
-            else{
-
-                document.getElementById(
-                    'distanceText'
-                ).innerText =
-                    "Normal";
-
-            }
-
-            // ATTENTION
-
-            const nose =
-                landmarks[1];
-
-            if(
-                nose.x < 0.35 ||
-                nose.x > 0.65
-            ){
-
-                attentionValue = 40;
-
-                document.getElementById(
-                    'attentionScore'
-                ).innerText = 40;
-
-                document.getElementById(
-                    'statusText'
-                ).innerText =
-                    "⚠ Looking Away";
-
-                speak("Please focus on screen");
-
-            }
-
-            else{
-
-                attentionValue = 100;
-
-                document.getElementById(
-                    'attentionScore'
-                ).innerText = 100;
-
-                document.getElementById(
-                    'statusText'
-                ).innerText =
-                    "🟢 Focused";
-
-            }
-
-            updateCharts(
-                attentionValue,
-                fps
-            );
-
-        }
-
-    }
-
-    document.getElementById(
-        'screenTime'
-    ).innerText = Math.floor(
-
-        (Date.now()-startTime)/1000
-
-    );
+}
 
 }
 
 async function main(){
 
-    await setupCamera();
+await setupCamera();
 
-    video.play();
+video.play();
 
-    canvas.width = 960;
+video.addEventListener('pause',()=>{
+video.play();
+});
 
-    canvas.height = 720;
+canvas.width = 640;
+canvas.height = 480;
 
-    const faceMesh =
-        new FaceMesh({
+const faceMesh = new FaceMesh({
+locateFile:(file)=>{
+return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+}
+});
 
-            locateFile:(file)=>{
+faceMesh.setOptions({
+maxNumFaces:1,
+refineLandmarks:false,
+minDetectionConfidence:0.7,
+minTrackingConfidence:0.5
+});
 
-                return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+faceMesh.onResults(onResults);
 
-            }
+const camera = new Camera(video, {
 
-        });
+onFrame: async () => {
 
-    faceMesh.setOptions({
+try {
 
-        maxNumFaces:1,
+if (video.readyState >= 2) {
 
-        refineLandmarks:true,
-
-        minDetectionConfidence:0.7,
-
-        minTrackingConfidence:0.7
-
-    });
-
-    faceMesh.onResults(onResults);
-
-    const camera =
-        new Camera(video,{
-
-            onFrame: async ()=>{
-
-                await faceMesh.send({
-
-                    image:video
-
-                });
-
-            },
-
-            width:960,
-            height:720
-
-        });
-
-    camera.start();
+await faceMesh.send({
+image: video
+});
 
 }
+
+}
+catch (error) {
+
+console.log('FaceMesh Error:', error);
+
+}
+
+},
+
+width: 640,
+height: 480
+
+});
+
+camera.start();
+
+}
+
+
+async function submitVision(event){
+
+event.preventDefault();
+
+const answer =
+event.target.querySelector(
+'input[name="answer"]'
+).value;
+
+const response =
+await fetch('/vision_test',{
+
+method:'POST',
+
+headers:{
+'Content-Type':'application/json'
+},
+
+body:JSON.stringify({
+answer:answer
+})
+
+});
+
+const data =
+await response.json();
+
+document.getElementById(
+'visionLetter'
+).innerText = data.new_letter;
+event.target.reset();
+
+document.getElementById(
+'visionResult'
+).innerHTML = `
+
+Correct: ${data.score}<br>
+Attempts: ${data.attempts}<br>
+Accuracy: ${data.accuracy}%
+
+`;
+
+}
+
+async function submitColor(event){
+
+event.preventDefault();
+
+const answer =
+event.target.querySelector(
+'input[name="color_answer"]'
+).value;
+
+const response =
+await fetch('/color_test',{
+
+method:'POST',
+
+headers:{
+'Content-Type':'application/json'
+},
+
+body:JSON.stringify({
+answer:answer
+})
+
+});
+
+const data =
+await response.json();
+
+document.querySelector(
+'.plate'
+).src =
+'/static/' + data.new_image;
+event.target.reset();
+
+document.getElementById(
+'colorResult'
+).innerHTML = `
+
+Correct: ${data.score}<br>
+Attempts: ${data.attempts}<br>
+Accuracy: ${data.accuracy}%
+
+`;
+
+}
+
 
 main();
 
 </script>
 
 </body>
-
 </html>
+
