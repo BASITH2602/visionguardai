@@ -84,10 +84,10 @@ VisionGuard AI is a real-time AI-powered eye wellness and attention monitoring s
 
 #bash
 
-git clone https://github.com/BASITH2602/visionguardai
-cd visionguardai
-pip install -r requirements.txt
-python app.py 
+# git clone https://github.com/BASITH2602/visionguardai
+# cd visionguardai
+# pip install -r requirements.txt
+# python app.py 
 
 👨‍💻 Developer
 
