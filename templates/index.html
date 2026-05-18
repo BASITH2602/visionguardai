@@ -1279,18 +1279,18 @@ const data =
 await response.json();
 
 document.getElementById(
+'visionLetter'
+).innerText = data.new_letter;
+
+document.getElementById(
 'visionResult'
 ).innerHTML = `
-<div id="visionResult" class="score-text">
-
 Correct: ${data.score}<br>
-
 Attempts: ${data.attempts}<br>
-
 Accuracy: ${data.accuracy}%
-
-</div>
 `;
+
+event.target.reset();
 
 }
 
@@ -1330,13 +1330,9 @@ event.target.reset();
 document.getElementById(
 'colorResult'
 ).innerHTML = `
-
-<div id="colorResult">
 Correct: ${data.score}<br>
 Attempts: ${data.attempts}<br>
 Accuracy: ${data.accuracy}%
-</div>
-
 `;
 
 }
