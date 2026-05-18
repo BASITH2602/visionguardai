@@ -64,13 +64,12 @@ VisionGuard AI is a real-time AI-powered eye wellness and attention monitoring s
 
 📸 Screenshots
 
-#  <img width="652" height="893" alt="Screenshot 2026-05-18 190037" src="https://github.com/user-attachments/assets/edb2389f-d694-476b-87ab-449fa1d2f2dc" />
-<img width="1920" height="1080" alt="Screenshot 2026-05-18 185848" src="https://github.com/user-attachments/assets/07b70310-1c72-44c9-b016-c2cf12d24a2d" />
-<img width="1920" height="1080" alt="Screenshot 2026-05-18 185750" src="https://github.com/user-attachments/assets/eba873b9-0268-4586-826e-2164bad8e0ff" />
-<img width="1920" height="1080" alt="Screenshot 2026-05-18 185623" src="https://github.com/user-attachments/assets/dd0b3c59-60d3-43f9-9687-4e509d7058b5" />
-<img width="1920" height="1080" alt="Screenshot 2026-05-18 182410" src="https://github.com/user-attachments/assets/ffce813d-3ae0-46b6-b938-c736484e9379" />
-<img width="1920" height="1080" alt="Screenshot 2026-05-18 182316" src="https://github.com/user-attachments/assets/a4d063c0-aa72-45e0-8b4a-4309400c5d59" />
-<img width="1920" height="1080" alt="Screenshot 2026-05-18 182249" src="https://github.com/user-attachments/assets/e63c1f0f-aef9-4d8f-928e-05d51fb6ddc3" />
+# <img width="1920" height="1080" alt="Screenshot 2026-05-18 182249" src="https://github.com/user-attachments/assets/0c027e16-20d7-4967-b823-f6591ffe0740" />
+<img width="1920" height="1080" alt="Screenshot 2026-05-18 182316" src="https://github.com/user-attachments/assets/4ac192b7-d55b-40d6-90f4-f87f3a1753a8" />
+<img width="1920" height="1080" alt="Screenshot 2026-05-18 182410" src="https://github.com/user-attachments/assets/048729da-74c4-4172-aaae-8d43c66ca0a5" />
+<img width="1920" height="1080" alt="Screenshot 2026-05-18 185848" src="https://github.com/user-attachments/assets/f9468afd-2a66-4e73-aa6f-a9532659871b" />
+<img width="652" height="893" alt="Screenshot 2026-05-18 190037" src="https://github.com/user-attachments/assets/15907d39-b3f4-4910-bb23-be30572fc300" />
+
 
 🔮 Future Improvements
 
