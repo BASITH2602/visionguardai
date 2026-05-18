@@ -29,16 +29,18 @@ VisionGuard AI is a real-time AI-powered eye wellness and attention monitoring s
 #  Environmental lighting
 #  The system generates intelligent recommendations and futuristic diagnostic reports.
 
-📊 Technologies Used
+📊 Tech Stack
 
-#  Python
-#  Flask
-#  OpenCV
-#  MediaPipe FaceMesh
-#  HTML/CSS/JavaScript
-#  Chart.js
-#  jsPDF
-#  HTML2Canvas
+- Python
+- Flask
+- OpenCV
+- MediaPipe FaceMesh
+- HTML
+- CSS
+- JavaScript
+- Chart.js
+- jsPDF
+- HTML2Canvas
 
 📄 Premium Report Features
 
@@ -56,6 +58,9 @@ VisionGuard AI is a real-time AI-powered eye wellness and attention monitoring s
 🌐 Live Demo
 
 🔗 https://visionguard-ai-za3v.onrender.com
+                      or
+[VisionGuard AI Live Demo](https://visionguard-ai-za3v.onrender.com)
+
 
 📸 Screenshots
 
@@ -67,7 +72,13 @@ VisionGuard AI is a real-time AI-powered eye wellness and attention monitoring s
 <img width="1920" height="1080" alt="Screenshot 2026-05-18 182316" src="https://github.com/user-attachments/assets/a4d063c0-aa72-45e0-8b4a-4309400c5d59" />
 <img width="1920" height="1080" alt="Screenshot 2026-05-18 182249" src="https://github.com/user-attachments/assets/e63c1f0f-aef9-4d8f-928e-05d51fb6ddc3" />
 
+🔮 Future Improvements
 
+- YOLO eye detection
+- Dlib facial landmarks
+- AI fatigue prediction
+- MediaPipe Tasks API integration
+- Voice assistant alerts
 
 ⚡ Installation
 
