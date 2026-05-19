@@ -244,6 +244,7 @@ const stream = await navigator.mediaDevices.getUserMedia({
 });
 
 video.srcObject = stream;
+video.play();
 
 return new Promise((resolve)=>{
 video.onloadedmetadata = ()=>{
@@ -1201,8 +1202,8 @@ video.addEventListener('pause',()=>{
 video.play();
 });
 
-canvas.width = 640;
-canvas.height = 480;
+canvas.width = video.videoWidth;
+canvas.height = video.videoHeight;
 
 const faceMesh = new FaceMesh({
 locateFile:(file)=>{
@@ -1237,7 +1238,8 @@ image: video
 
 }
 
-} catch (error) {
+}
+catch (error) {
 
 console.log('FaceMesh Error:', error);
 
@@ -1245,8 +1247,8 @@ console.log('FaceMesh Error:', error);
 
 },
 
-width: 640,
-height: 480
+width: 320,
+height: 240
 
 });
 
