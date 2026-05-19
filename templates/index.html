@@ -236,15 +236,13 @@ const fpsChart = createChart('fpsChart','FPS','#ffff00');
 async function setupCamera(){
 
 const stream = await navigator.mediaDevices.getUserMedia({
-    video:{
-        facingMode:"user",
-        width:{ideal:320},
-        height:{ideal:240}
-    }
+video:{
+width:640,
+height:480
+}
 });
 
 video.srcObject = stream;
-video.play();
 
 return new Promise((resolve)=>{
 video.onloadedmetadata = ()=>{
@@ -282,7 +280,7 @@ function updateCharts(attention,fps){
 
 chartCounter++;
 
-if(chartCounter % 30 !== 0){
+if(chartCounter % 15 !== 0){
 return;
 }
 
@@ -1131,7 +1129,7 @@ riskLevel.innerText = risk;
 
 let fatigue = 'Low Fatigue Risk';
 
-if(health < 70 || avgEAR < 0.21){
+if(health < 70 || avgEAR < 0.20){
 fatigue = 'Moderate Fatigue Risk';
 }
 
@@ -1202,8 +1200,8 @@ video.addEventListener('pause',()=>{
 video.play();
 });
 
-canvas.width = video.videoWidth;
-canvas.height = video.videoHeight;
+canvas.width = 640;
+canvas.height = 480;
 
 const faceMesh = new FaceMesh({
 locateFile:(file)=>{
@@ -1228,13 +1226,9 @@ try {
 
 if (video.readyState >= 2) {
 
-if(Date.now() % 2 === 0){
-
 await faceMesh.send({
 image: video
 });
-
-}
 
 }
 
@@ -1247,8 +1241,8 @@ console.log('FaceMesh Error:', error);
 
 },
 
-width: 320,
-height: 240
+width: 640,
+height: 480
 
 });
 
