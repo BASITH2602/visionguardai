@@ -258,66 +258,86 @@ button:hover{
 
 }
 
-.chart-container canvas{
-
-    width:100% !important;
-
-    height:220px !important;
-
+.chart-container{
+    position: relative;
+    z-index: 1;
+    margin-top: 20px;
 }
 
-/* MOBILE */
+video{
+    position: relative;
+    z-index: 2;
+}
 
-@media(max-width:1200px){
+/* =========================
+   MOBILE RESPONSIVE DESIGN
+========================= */
 
-    .dashboard{
+@media screen and (max-width: 768px){
 
+    .main-layout{
         flex-direction:column;
+        width:100%;
+        margin-top:90px;
+        gap:20px;
+    }
 
-        align-items:center;
+    .left-panel{
+        width:100%;
+        position:relative;
+        top:0;
+    }
 
+    .camera-box{
+        position:relative;
+        width:100%;
+        height:auto;
+        aspect-ratio:4/3;
     }
 
     .side-panel{
-
-        width:90%;
-
+        width:100%;
+        min-width:100%;
+        margin-left:0;
     }
 
-}
+    .card{
+        padding:18px;
+    }
 
-@media(max-width:768px){
+    .card h2{
+        font-size:32px;
+    }
 
+    .card p{
+        font-size:22px;
+    }
 
-    .vision-letter{
-
-        font-size:55px;
-
+    input{
+        font-size:22px;
     }
 
     button{
-
-        width:100%;
-
+        font-size:20px;
     }
-
-}
-
-@media(max-width:480px){
-
 
     .vision-letter{
-
-        font-size:45px;
-
+        font-size:55px;
     }
 
-    .plate{
-
-        width:180px;
-
+    .chart-container{
+        height:180px;
     }
 
+    canvas.chart{
+        width:100% !important;
+        height:180px !important;
+    }
+
+    #titleBar{
+        font-size:30px;
+        width:90%;
+    }
 }
 
 #titleBar{
