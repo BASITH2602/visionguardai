@@ -51,13 +51,14 @@ body{
 .camera-box{
     position:fixed;
 
-    width: 1500px;
-    height: 1200px;
+    width:100%;
+    max-width:700px;
+
+    height:auto;
+    aspect-ratio:4/3;
 
     border:3px solid #00ffee;
-
     border-radius:20px;
-
     overflow:hidden;
 
     box-shadow:0 0 25px #00ffee;
@@ -291,8 +292,7 @@ video{
     .camera-box{
         position:relative;
         width:100%;
-        height:auto;
-        aspect-ratio:4/3;
+        max-width:100%;
     }
 
     .side-panel{
